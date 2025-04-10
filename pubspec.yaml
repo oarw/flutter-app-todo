@@ -15,7 +15,7 @@ dependencies:
   provider: ^6.0.5
   sqflite: ^2.3.0
   path: ^1.8.3
-  intl: ^0.18.1
+  intl: ^0.17.0  # Downgraded from ^0.18.1 to fix compatibility with charts_flutter
   shared_preferences: ^2.2.0
   http: ^1.1.0
   flutter_local_notifications: ^15.1.0+1
