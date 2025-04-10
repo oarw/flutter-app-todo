@@ -28,7 +28,26 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Accept licenses
-        run: yes | sdkmanager --licenses
+        shell: powershell
+        run: |
+          $sdkRoot = "$env:ANDROID_SDK_ROOT"
+          $licenseDir = "$sdkRoot\licenses"
+          
+          if (-Not (Test-Path $licenseDir)) {
+            New-Item -Path $licenseDir -ItemType Directory
+          }
+          
+          # Accept all SDK licenses
+          @(
+            "android-sdk-license",
+            "android-sdk-preview-license",
+            "google-gdk-license"
+          ) | ForEach-Object {
+            $licenseFile = "$licenseDir\$_"
+            Set-Content -Path $licenseFile -Value "d56f5187479451eabf01fb78af6dfcb131a6481e" -Force
+            Add-Content -Path $licenseFile -Value "24333f8a63b6825ea9c5514f83c2829b004d1fee" -Force
+            Add-Content -Path $licenseFile -Value "84831b9409646a918e30573bab4c9c91346d8abd" -Force
+          }
 
       - name: Get dependencies
         run: flutter pub get
