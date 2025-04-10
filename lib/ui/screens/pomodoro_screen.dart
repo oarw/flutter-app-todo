@@ -233,7 +233,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                   ),
                   _buildStatItem(
                     '完成率',
-                    '${((stats['completed_sessions'] / stats['total_sessions']) * 100).toStringAsFixed(1)}%',
+                    '${(((stats['completed_sessions'] ?? 0) / (stats['total_sessions'] ?? 1)) * 100).toStringAsFixed(1)}%',
                     Icons.check_circle,
                   ),
                   _buildStatItem(

@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import '../models/schedule.dart';
 import '../services/database_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz_data;
 
 class ScheduleProvider with ChangeNotifier {
   final DatabaseService _db = DatabaseService.instance;
@@ -19,6 +21,10 @@ class ScheduleProvider with ChangeNotifier {
   }
 
   Future<void> _initializeNotifications() async {
+    // 初始化时区数据
+    tz_data.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Asia/Shanghai')); // 设置为中国时区
+
     const initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initializationSettingsIOS = DarwinInitializationSettings();
     const initializationSettings = InitializationSettings(
@@ -111,12 +117,14 @@ class ScheduleProvider with ChangeNotifier {
       iOS: iosDetails,
     );
 
-    await _notifications.schedule(
+    await _notifications.zonedSchedule(
       schedule.id.hashCode,
       '日程提醒',
       '${schedule.title} 将在 ${minutes} 分钟后开始',
-      scheduledTime,
+      tz.TZDateTime.from(scheduledTime, tz.local),
       details,
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 

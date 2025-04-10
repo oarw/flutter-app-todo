@@ -115,7 +115,7 @@ class StatisticsProvider with ChangeNotifier {
       return await _ai.getTimeManagementAdvice(
         completedTasks: completedTasks,
         upcomingTasks: upcomingTasks,
-        timeSpentData: timeSpentData,
+        timeSpentData: Map<String, int>.from(timeSpentData),
       );
     } catch (e) {
       _error = '获取生产力洞察失败: $e';
