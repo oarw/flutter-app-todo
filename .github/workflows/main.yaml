@@ -23,6 +23,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.0'
+          channel: 'stable'
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v2
@@ -48,6 +49,26 @@ jobs:
             Add-Content -Path $licenseFile -Value "24333f8a63b6825ea9c5514f83c2829b004d1fee" -Force
             Add-Content -Path $licenseFile -Value "84831b9409646a918e30573bab4c9c91346d8abd" -Force
           }
+      
+      # 新增步骤：初始化项目结构
+      - name: Create Flutter project structure
+        run: |
+          # 保存当前目录内容到临时目录
+          mkdir -p temp_backup
+          cp -r lib temp_backup/
+          cp -r assets temp_backup/
+          cp pubspec.yaml temp_backup/
+          
+          # 创建新的Flutter项目
+          flutter create --org com.timemaster --platforms android,ios .
+          
+          # 恢复备份的内容
+          cp -r temp_backup/lib .
+          cp -r temp_backup/assets .
+          cp temp_backup/pubspec.yaml .
+          
+          # 清理临时目录
+          rm -rf temp_backup
 
       - name: Get dependencies
         run: flutter pub get
