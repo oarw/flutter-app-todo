@@ -52,23 +52,42 @@ jobs:
       
       # 新增步骤：初始化项目结构
       - name: Create Flutter project structure
+        shell: powershell
         run: |
-          # 保存当前目录内容到临时目录
-          mkdir -p temp_backup
-          cp -r lib temp_backup/
-          cp -r assets temp_backup/
-          cp pubspec.yaml temp_backup/
+          # 创建临时备份目录
+          New-Item -Path "temp_backup" -ItemType Directory -Force
+
+          # 保存当前目录内容到临时目录（检查目录是否存在）
+          if (Test-Path "lib") {
+            Copy-Item -Path "lib" -Destination "temp_backup" -Recurse
+          }
+          
+          if (Test-Path "assets") {
+            Copy-Item -Path "assets" -Destination "temp_backup" -Recurse
+          }
+          
+          if (Test-Path "pubspec.yaml") {
+            Copy-Item -Path "pubspec.yaml" -Destination "temp_backup"
+          }
           
           # 创建新的Flutter项目
           flutter create --org com.timemaster --platforms android,ios .
           
-          # 恢复备份的内容
-          cp -r temp_backup/lib .
-          cp -r temp_backup/assets .
-          cp temp_backup/pubspec.yaml .
+          # 恢复备份的内容（检查目录是否存在）
+          if (Test-Path "temp_backup/lib") {
+            Copy-Item -Path "temp_backup/lib" -Destination "." -Recurse -Force
+          }
+          
+          if (Test-Path "temp_backup/assets") {
+            Copy-Item -Path "temp_backup/assets" -Destination "." -Recurse -Force
+          }
+          
+          if (Test-Path "temp_backup/pubspec.yaml") {
+            Copy-Item -Path "temp_backup/pubspec.yaml" -Destination "." -Force
+          }
           
           # 清理临时目录
-          rm -rf temp_backup
+          Remove-Item -Path "temp_backup" -Recurse -Force
 
       - name: Get dependencies
         run: flutter pub get
