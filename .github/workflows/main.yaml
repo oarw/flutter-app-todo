@@ -70,8 +70,8 @@ jobs:
             Copy-Item -Path "pubspec.yaml" -Destination "temp_backup"
           }
           
-          # 创建新的Flutter项目
-          flutter create --org com.timemaster --platforms android,ios .
+          # 创建新的Flutter项目，使用有效的Dart包名
+          flutter create --project-name timemaster_app --org com.timemaster --platforms android,ios .
           
           # 恢复备份的内容（检查目录是否存在）
           if (Test-Path "temp_backup/lib") {
