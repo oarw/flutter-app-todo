@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../models/schedule.dart';
 import '../services/database_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'package:timezone/data/latest.dart' as tz_data;
 
 class ScheduleProvider with ChangeNotifier {
   final DatabaseService _db = DatabaseService.instance;
@@ -120,10 +121,10 @@ class ScheduleProvider with ChangeNotifier {
     await _notifications.zonedSchedule(
       schedule.id.hashCode,
       '日程提醒',
-      '${schedule.title} 将在 ${minutes} 分钟后开始',
+      '${schedule.title} 将在 $minutes 分钟后开始',
       tz.TZDateTime.from(scheduledTime, tz.local),
       details,
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
   }

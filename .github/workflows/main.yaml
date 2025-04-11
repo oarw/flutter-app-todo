@@ -88,6 +88,12 @@ jobs:
           
           # 清理临时目录
           Remove-Item -Path "temp_backup" -Recurse -Force
+          
+      # 添加创建assets/images目录的步骤
+      - name: Create assets directories
+        shell: powershell
+        run: |
+          New-Item -Path "assets/images" -ItemType Directory -Force
 
       - name: Get dependencies
         run: flutter pub get
